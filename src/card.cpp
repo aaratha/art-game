@@ -1,7 +1,10 @@
 #include "card.hpp"
+#include "utils.hpp"
 #include <raylib.h>
 
-Card::Card(vec2 pos) : PhysObj(pos) {}
+Card::Card(vec2 pos) : PhysObj(pos) {
+  rectangle = {pos.x, pos.y, width, height};
+}
 
 void Card::update() {
   Rectangle cardRect = {
@@ -55,6 +58,40 @@ void Card::update() {
 }
 
 void Card::draw() {
-  DrawRectangle(getPos().x - width / 2, getPos().y - height / 2, width, height,
-                RED);
+  // Draw shadow
+  float distanceFromCenter = getPos().x - (GetScreenWidth() / 2.0f);
+  float effectiveShadowOffset =
+      shadowOffset * (distanceFromCenter * 1.5 / (GetScreenWidth() / 2.0f));
+
+  width = 100 * scale;
+  height = 150 * scale;
+  if (isDragging) {
+    if (scale < maxScale) {
+      scale = lerp1D(scale, maxScale, 0.3);
+    }
+    if (shadowOffset < 10) {
+      shadowOffset = lerp1D(shadowOffset, 10, 0.3);
+    }
+  } else {
+    if (scale > minScale) {
+      scale = lerp1D(scale, minScale, 0.3);
+    }
+    if (shadowOffset > 0)
+      shadowOffset = lerp1D(shadowOffset, 0, 0.3);
+  }
+
+  angle = lerp1D(angle, getPos().x - getPrev().x, 0.2);
+
+  Rectangle shadowRect = {getPos().x + effectiveShadowOffset,
+                          getPos().y + shadowOffset, width, height};
+
+  rectangle = {
+      getPos().x, // x adjusted for center
+      getPos().y, // y adjusted for center
+      width,      // width with current scale
+      height      // height with current scale
+  };
+  // Draw card
+  DrawRectanglePro(shadowRect, vec2(width / 2, height / 2), angle, GRAY);
+  DrawRectanglePro(rectangle, vec2(width / 2, height / 2), angle, RED);
 }

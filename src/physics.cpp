@@ -14,6 +14,8 @@ void PhysObj::accelerate(vec2 a) { acc += a; }
 
 vec2 PhysObj::getPos() { return pos; }
 
+vec2 PhysObj::getPrev() { return prev; }
+
 vec2 PhysObj::getTarg() { return targ; }
 
 void PhysObj::setPos(vec2 p) { pos = p; }

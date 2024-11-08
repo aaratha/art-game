@@ -19,6 +19,7 @@ public:
   void accelerate(vec2 a);
 
   vec2 getPos();
+  vec2 getPrev();
   vec2 getTarg();
   void setPos(vec2 p);
   void setTarg(vec2 t);

@@ -1,4 +1,5 @@
 #include "card.hpp"
+#include "graphics.hpp"
 #include "raylib-cpp.hpp"
 #include "utils.hpp"
 
@@ -38,21 +39,13 @@ int main(void) {
       solver.update(dt);
     }
 
-    BeginDrawing();
-
     window.ClearBackground(RAYWHITE);
 
     for (auto card : cards) {
-      card->draw();
       card->update();
     }
 
-    DrawFPS(10, 10);
-
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-      DrawText("Left mouse button is pressed", 100, 40, 10, RED);
-    }
-    EndDrawing();
+    DrawScene(cards);
   }
 
   return 0;
