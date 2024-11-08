@@ -81,6 +81,8 @@ void Card::draw() {
   }
 
   angle = lerp1D(angle, getPos().x - getPrev().x, 0.2);
+  if (0.5 > angle && angle > -0.5)
+    angle = 0;
 
   Rectangle shadowRect = {getPos().x + effectiveShadowOffset,
                           getPos().y + shadowOffset, width, height};
