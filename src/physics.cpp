@@ -6,7 +6,7 @@ PhysObj::PhysObj(vec2 pos) : pos(pos), prev(pos), targ(pos) {}
 void PhysObj::updatePhysics(float dt) {
   const vec2 vel = pos - prev;
   prev = pos;
-  pos += vel + acc * dt * dt;
+  pos += (vel * friction) + acc * dt * dt;
   acc = vec2(0, 0);
 }
 
@@ -33,19 +33,7 @@ void Solver::updatePositions(float dt) {
 
 void Solver::applyForces() {
   for (auto obj : objects) {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-      // Set `targ` to current mouse position, adjusted for Raylib's coordinate
-      // system
-      if (Vector2Distance(obj->getPos(), obj->getTarg()) < 10.0f) {
-        obj->setPos(obj->getTarg());
-      } else {
-        obj->setPos(lerp(obj->getPos(), obj->getTarg(), 0.2f));
-      }
-
-      obj->accelerate(vec2(0, 0));
-    } else {
-      // Apply gravity when the mouse button is not down
-      obj->accelerate(g);
-    }
+    // Apply gravity when the mouse button is not down
+    obj->accelerate(g);
   }
 }

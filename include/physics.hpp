@@ -9,6 +9,7 @@ private:
   vec2 prev;
   vec2 targ;
   vec2 acc;
+  float friction = 0.98;
 
 public:
   PhysObj(vec2 pos);
