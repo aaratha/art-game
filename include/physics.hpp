@@ -1,17 +1,32 @@
 #pragma once
 
 #include "utils.hpp"
+#include <raylib.h>
 
 class PhysObj {
 private:
   vec2 pos;
   vec2 prev;
   vec2 targ;
-  vec2 vel;
+  vec2 acc;
 
 public:
-  PhysObj();
+  PhysObj(vec2 pos);
   ~PhysObj();
 
-  void Update(float dt);
+  void updatePhysics(float dt);
+  void accelerate(vec2 a);
+
+  vec2 getPos();
+  vec2 getTarg();
+  void setPos(vec2 p);
+  void setTarg(vec2 t);
+};
+
+struct Solver {
+  std::vector<PhysObj *> objects;
+  vec2 g = vec2(0, 1000);
+  void update(float dt);
+  void updatePositions(float dt);
+  void applyForces();
 };

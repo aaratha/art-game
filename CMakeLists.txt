@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(art-game)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -46,7 +47,7 @@ FetchContent_Declare(
 )
 FetchContent_GetProperties(raygui)
 if (NOT raygui_POPULATED)
-    FetchContent_Populate(raygui)
+    FetchContent_MakeAvailable(raygui)
 endif()
 
 # Include directories for the project
@@ -60,6 +61,10 @@ include_directories(
 set(SOURCES
     src/main.cpp
     src/utils.cpp
+    src/graphics.cpp
+    src/globals.cpp
+    src/physics.cpp
+    src/card.cpp
 )
 
 # Main executable target
@@ -68,15 +73,10 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
 
-# Web Configurations
-if (${PLATFORM} STREQUAL "Web")
-    # Tell Emscripten to build an example.html file.
-    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
-    # Required linker flags for using Raylib with Emscripten
-    target_link_options(${PROJECT_NAME} PRIVATE
-        -sEXPORTED_FUNCTIONS=['_main','_malloc']
-        -sEXPORTED_RUNTIME_METHODS=ccall
-        -sUSE_GLFW=3)
+
+if(APPLE)
+    target_link_libraries(${PROJECT_NAME} PUBLIC "-framework Cocoa" "-framework IOKit" "-framework CoreVideo")
 endif()
+
 
 # Finished setup!
