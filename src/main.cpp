@@ -58,5 +58,11 @@ int main(void) {
     DrawScene(cards);
   }
 
+  // De-Initialization
+  for (auto card : cards) {
+    card->~Card();
+    delete card;
+  }
+
   return 0;
 }

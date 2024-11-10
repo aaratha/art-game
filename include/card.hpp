@@ -51,11 +51,13 @@ class Card : public PhysObj {
   Texture2D texture;
   Texture2D shadowTexture;
   bool textureLoaded = false;
+  bool shadowTextureLoaded = false;
 
 public:
   bool isDragging = false;
 
   Card(vec2 pos, Nation nation);
+  ~Card();
 
   void setNation(Nation nation);
   Nation getNation();
@@ -65,5 +67,6 @@ public:
   void update(Globals &globals);
 
   void loadTexture(const std::string &filename);
+  void loadShadowTexture(const std::string &filename);
   void draw();
 };

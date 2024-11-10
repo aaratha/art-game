@@ -4,6 +4,16 @@ Card::Card(vec2 pos, Nation nation) : PhysObj(pos), nation(nation) {
   rectangle = {pos.x, pos.y, width, height};
   applyNationProperties();
   loadTexture("resources/sprites/card1.png");
+  loadShadowTexture("resources/sprites/card_shadow.png");
+}
+
+Card::~Card() {
+  if (textureLoaded) {
+    UnloadTexture(texture);
+  }
+  if (shadowTextureLoaded) {
+    UnloadTexture(shadowTexture);
+  }
 }
 
 Nation Card::getNation() { return nation; }
@@ -95,6 +105,11 @@ void Card::loadTexture(const std::string &filename) {
   textureLoaded = true;
 }
 
+void Card::loadShadowTexture(const std::string &filename) {
+  shadowTexture = LoadTexture(filename.c_str());
+  shadowTextureLoaded = true;
+}
+
 void Card::draw() {
   // Draw shadow as before
   float distanceFromCenter = getPos().x - (GetScreenWidth() / 2.0f);
@@ -119,17 +134,17 @@ void Card::draw() {
   Rectangle shadowRect = {getPos().x + effectiveShadowOffset,
                           getPos().y + shadowOffset, width, height};
 
-  // Draw shadow rectangle
-  DrawRectanglePro(shadowRect, vec2(width / 2, height / 2), angle,
-                   (Color){0, 0, 0, 70});
-
   // Draw the texture if it's loaded
   if (textureLoaded) {
     Rectangle sourceRect = {0.0f, 0.0f, static_cast<float>(texture.width),
                             static_cast<float>(texture.height)};
     Rectangle destRect = {getPos().x, getPos().y, width, height};
+    Rectangle shadowDestRect = {getPos().x + effectiveShadowOffset,
+                                getPos().y + shadowOffset, width, height};
     vec2 origin = {width / 2, height / 2}; // Center of rotation
 
+    DrawTexturePro(shadowTexture, sourceRect, shadowDestRect, origin, angle,
+                   (Color){0, 0, 0, 70});
     DrawTexturePro(texture, sourceRect, destRect, origin, angle, WHITE);
   } else {
     // Fallback: Draw the rectangle in red if texture isn't loaded
