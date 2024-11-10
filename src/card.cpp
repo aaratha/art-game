@@ -8,6 +8,15 @@ Card::Card(vec2 pos, Nation nation) : PhysObj(pos), nation(nation) {
 
 Nation Card::getNation() { return nation; }
 
+Rectangle Card::getRect() {
+  return {
+      getPos().x - width / 2,  // x position (centered)
+      getPos().y - height / 2, // y position (centered)
+      width,                   // width of the card
+      height                   // height of the card
+  };
+}
+
 void Card::applyNationProperties() {
   switch (nation) {
   case Nation::NONE:

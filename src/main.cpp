@@ -46,7 +46,7 @@ int main(void) {
 
     if (!pause) {
       float dt = GetFrameTime();
-      solver.update(dt);
+      solver.update(dt, cards);
     }
 
     window.ClearBackground(RAYWHITE);

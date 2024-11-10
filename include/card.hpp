@@ -39,7 +39,6 @@ class Card : public PhysObj {
   float shadowHeight = 150;
   float shadowOffset = 20;
   float scale = 1;
-  bool isDragging = false;
   vec2 dragOffset = {0, 0}; // Offset between card center and mouse position
   float maxScale = 1.2;
   float minScale = 1.0;
@@ -50,13 +49,17 @@ class Card : public PhysObj {
   Color color = GRAY;
 
   Texture2D texture;
+  Texture2D shadowTexture;
   bool textureLoaded = false;
 
 public:
+  bool isDragging = false;
+
   Card(vec2 pos, Nation nation);
 
   void setNation(Nation nation);
   Nation getNation();
+  Rectangle getRect();
   void applyNationProperties();
 
   void update(Globals &globals);

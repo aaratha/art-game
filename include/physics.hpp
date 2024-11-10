@@ -3,6 +3,8 @@
 #include "utils.hpp"
 #include <raylib.h>
 
+class Card;
+
 class PhysObj {
 private:
   vec2 pos;
@@ -27,7 +29,8 @@ public:
 struct Solver {
   std::vector<PhysObj *> objects;
   vec2 g = vec2(0, 0);
-  void update(float dt);
+  void update(float dt, std::vector<Card *> &cards);
   void updatePositions(float dt);
+  void applyCollisions(std::vector<Card *> &cards);
   void applyForces();
 };
