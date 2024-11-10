@@ -8,7 +8,8 @@
 #include <vector>
 
 int main(void) {
-  // Initialization
+  // test
+  //  Initialization
   //---------------------------------------------------------
   const int screenWidth = 800;
   const int screenHeight = 600;
