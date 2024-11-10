@@ -9,11 +9,10 @@ private:
   vec2 prev;
   vec2 targ;
   vec2 acc;
-  float friction = 0.98;
+  float friction = 0.9;
 
 public:
   PhysObj(vec2 pos);
-  ~PhysObj();
 
   void updatePhysics(float dt);
   void accelerate(vec2 a);
@@ -27,7 +26,7 @@ public:
 
 struct Solver {
   std::vector<PhysObj *> objects;
-  vec2 g = vec2(0, 1000);
+  vec2 g = vec2(0, 0);
   void update(float dt);
   void updatePositions(float dt);
   void applyForces();

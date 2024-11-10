@@ -1,7 +1,36 @@
 #pragma once
 
+#include "globals.hpp"
 #include "physics.hpp"
 #include "raylib-cpp.hpp"
+#include "utils.hpp"
+
+#include <iostream>
+
+// Define nation types
+enum class Nation {
+  NONE,
+  USA,
+  USSR,
+  UK,
+  FRANCE,
+  GERMANY,
+  ITALY,
+  JAPAN,
+  CHINA,
+  INDIA,
+  BRAZIL,
+  MEXICO,
+  CANADA,
+  AUSTRALIA,
+  SOUTH_AFRICA,
+  EGYPT,
+  SAUDI_ARABIA,
+  IRAN,
+  IRAQ,
+  TURKEY,
+  ISREAL
+};
 
 class Card : public PhysObj {
   float width = 100;
@@ -17,8 +46,21 @@ class Card : public PhysObj {
   float angle = 0;
   Rectangle rectangle;
 
+  Nation nation = Nation::NONE;
+  Color color = GRAY;
+
+  Texture2D texture;
+  bool textureLoaded = false;
+
 public:
-  Card(vec2 pos);
-  void update();
+  Card(vec2 pos, Nation nation);
+
+  void setNation(Nation nation);
+  Nation getNation();
+  void applyNationProperties();
+
+  void update(Globals &globals);
+
+  void loadTexture(const std::string &filename);
   void draw();
 };

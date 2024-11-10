@@ -1,12 +1,34 @@
 #include "card.hpp"
-#include "utils.hpp"
-#include <raylib.h>
 
-Card::Card(vec2 pos) : PhysObj(pos) {
+Card::Card(vec2 pos, Nation nation) : PhysObj(pos), nation(nation) {
   rectangle = {pos.x, pos.y, width, height};
+  applyNationProperties();
+  loadTexture("resources/sprites/card1.png");
 }
 
-void Card::update() {
+Nation Card::getNation() { return nation; }
+
+void Card::applyNationProperties() {
+  switch (nation) {
+  case Nation::NONE:
+    color = GRAY;
+    break;
+  case Nation::USA:
+    color = BLUE;
+    break;
+  case Nation::USSR:
+    color = RED;
+    break;
+  case Nation::UK:
+    color = GREEN;
+    break;
+  case Nation::GERMANY:
+    color = YELLOW;
+    break;
+  }
+}
+
+void Card::update(Globals &globals) {
   Rectangle cardRect = {
       getPos().x - width / 2,  // x position (adjusted to the top-left corner)
       getPos().y - height / 2, // y position (adjusted to the top-left corner)
@@ -19,8 +41,9 @@ void Card::update() {
   // Start dragging if inside card and button is pressed
   if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) &&
       CheckCollisionPointRec(mousePos, cardRect)) {
-    if (!isDragging) {
+    if (!isDragging && !globals.isDraggingAnyCard) {
       isDragging = true;
+      globals.isDraggingAnyCard = true;
       dragOffset = getPos() - mousePos; // Set initial offset at drag start
     }
   }
@@ -28,6 +51,7 @@ void Card::update() {
   // Stop dragging on mouse release
   if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
     isDragging = false;
+    globals.isDraggingAnyCard = false;
   }
 
   // Update card position if dragging
@@ -57,27 +81,26 @@ void Card::update() {
   }
 }
 
+void Card::loadTexture(const std::string &filename) {
+  texture = LoadTexture(filename.c_str());
+  textureLoaded = true;
+}
+
 void Card::draw() {
-  // Draw shadow
+  // Draw shadow as before
   float distanceFromCenter = getPos().x - (GetScreenWidth() / 2.0f);
   float effectiveShadowOffset =
       shadowOffset * (distanceFromCenter * 1.5 / (GetScreenWidth() / 2.0f));
 
   width = 100 * scale;
   height = 150 * scale;
+
   if (isDragging) {
-    if (scale < maxScale) {
-      scale = lerp1D(scale, maxScale, 0.3);
-    }
-    if (shadowOffset < 10) {
-      shadowOffset = lerp1D(shadowOffset, 10, 0.3);
-    }
+    scale = lerp1D(scale, maxScale, 0.3);
+    shadowOffset = lerp1D(shadowOffset, 10, 0.3);
   } else {
-    if (scale > minScale) {
-      scale = lerp1D(scale, minScale, 0.3);
-    }
-    if (shadowOffset > 0)
-      shadowOffset = lerp1D(shadowOffset, 0, 0.3);
+    scale = lerp1D(scale, minScale, 0.3);
+    shadowOffset = lerp1D(shadowOffset, 0, 0.3);
   }
 
   angle = lerp1D(angle, getPos().x - getPrev().x, 0.2);
@@ -87,13 +110,20 @@ void Card::draw() {
   Rectangle shadowRect = {getPos().x + effectiveShadowOffset,
                           getPos().y + shadowOffset, width, height};
 
-  rectangle = {
-      getPos().x, // x adjusted for center
-      getPos().y, // y adjusted for center
-      width,      // width with current scale
-      height      // height with current scale
-  };
-  // Draw card
-  DrawRectanglePro(shadowRect, vec2(width / 2, height / 2), angle, GRAY);
-  DrawRectanglePro(rectangle, vec2(width / 2, height / 2), angle, RED);
+  // Draw shadow rectangle
+  DrawRectanglePro(shadowRect, vec2(width / 2, height / 2), angle,
+                   (Color){0, 0, 0, 70});
+
+  // Draw the texture if it's loaded
+  if (textureLoaded) {
+    Rectangle sourceRect = {0.0f, 0.0f, static_cast<float>(texture.width),
+                            static_cast<float>(texture.height)};
+    Rectangle destRect = {getPos().x, getPos().y, width, height};
+    vec2 origin = {width / 2, height / 2}; // Center of rotation
+
+    DrawTexturePro(texture, sourceRect, destRect, origin, angle, WHITE);
+  } else {
+    // Fallback: Draw the rectangle in red if texture isn't loaded
+    DrawRectanglePro(rectangle, vec2(width / 2, height / 2), angle, RED);
+  }
 }

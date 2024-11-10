@@ -74,6 +74,12 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
 
 
+# Copy resources folder to the build directory
+add_custom_command(TARGET art-game POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:art-game>/resources)
+
+
 if(APPLE)
     target_link_libraries(${PROJECT_NAME} PUBLIC "-framework Cocoa" "-framework IOKit" "-framework CoreVideo")
 endif()
