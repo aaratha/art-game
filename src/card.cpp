@@ -3,7 +3,6 @@
 Card::Card(vec2 pos, Nation nation) : PhysObj(pos), nation(nation) {
   rectangle = {pos.x, pos.y, width, height};
   applyNationProperties();
-  loadTexture("resources/sprites/card1.png");
   loadShadowTexture("resources/sprites/card_shadow.png");
 }
 
@@ -31,18 +30,23 @@ void Card::applyNationProperties() {
   switch (nation) {
   case Nation::NONE:
     color = GRAY;
+    loadTexture("resources/sprites/card_usa.png");
     break;
   case Nation::USA:
     color = BLUE;
+    loadTexture("resources/sprites/card_usa.png");
     break;
   case Nation::USSR:
     color = RED;
+    loadTexture("resources/sprites/card_usa.png");
     break;
   case Nation::UK:
     color = GREEN;
+    loadTexture("resources/sprites/card_usa.png");
     break;
   case Nation::GERMANY:
     color = YELLOW;
+    loadTexture("resources/sprites/card_usa.png");
     break;
   }
 }

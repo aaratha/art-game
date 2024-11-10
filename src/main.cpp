@@ -11,7 +11,7 @@ int main(void) {
   // Initialization
   //---------------------------------------------------------
   const int screenWidth = 800;
-  const int screenHeight = 450;
+  const int screenHeight = 600;
 
   Globals globals(screenWidth, screenHeight);
 
@@ -29,6 +29,8 @@ int main(void) {
   for (int i = 0; i < cards.size(); i++) {
     solver.objects.push_back(cards[i]);
   }
+
+  loadBackgroundTexture("resources/sprites/background.png");
 
   bool pause = false; // Movement pause
 
@@ -63,6 +65,7 @@ int main(void) {
     card->~Card();
     delete card;
   }
+  unloadBackgroundTexture();
 
   return 0;
 }

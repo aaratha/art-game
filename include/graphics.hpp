@@ -8,3 +8,10 @@
 #include <vector>
 
 void DrawScene(std::vector<Card *> cards);
+
+void loadBackgroundTexture(const std::string &filename);
+
+void unloadBackgroundTexture();
+
+extern Texture2D backgroundTexture;
+extern bool backgroundTextureLoaded;
